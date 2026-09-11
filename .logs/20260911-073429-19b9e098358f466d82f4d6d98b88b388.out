@@ -1,0 +1,55 @@
+skipping preview teardown: dev server not answering
+Prisma schema loaded from prisma/schema.prisma
+
+✔ Generated Prisma Client (v6.7.0) to ./node_modules/.prisma/client in 59ms
+
+Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+
+Tip: Curious about the SQL queries Prisma ORM generates? Optimize helps you enhance your visibility: https://pris.ly/tip-2-optimize
+
+▲ Next.js 16.3.3 (Turbopack)
+✓ Running next.config.js took 11ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 3.9s
+  Skipping validation of types
+  Finished TypeScript config validation in 6ms ...
+  Collecting page data using 26 workers ...
+  Generating static pages using 26 workers (0/8) ...
+  Generating static pages using 26 workers (2/8) 
+  Generating static pages using 26 workers (4/8) 
+  Generating static pages using 26 workers (6/8) 
+✓ Generating static pages using 26 workers (8/8) in 388ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+├ ○ /_not-found
+├ ○ /admin
+├ ƒ /api/admin/catalog
+├ ƒ /api/admin/experiences
+├ ƒ /api/admin/experiences/[id]/toggle
+├ ƒ /api/admin/login
+├ ƒ /api/admin/logout
+├ ƒ /api/admin/metrics
+├ ƒ /api/admin/orders
+├ ƒ /api/admin/orders/[id]/assign
+├ ƒ /api/admin/orders/[id]/confirm
+├ ƒ /api/admin/reviews
+├ ƒ /api/availability
+├ ƒ /api/checkout
+├ ƒ /api/cron/send-today
+├ ƒ /api/reviews
+├ ƒ /api/send-whatsapp
+├ ƒ /api/webhooks/stripe
+├ ○ /aviso-legal
+├ ○ /buy
+├ ○ /confirmation
+├ ○ /devoluciones
+└ ○ /privacidad
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+Successfully built app artifact

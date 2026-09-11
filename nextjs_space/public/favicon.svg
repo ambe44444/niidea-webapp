@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <rect width="256" height="256" fill="#0B0B0B"/>
+  <path d="M128 180c-8.8 0-16 7.2-16 16s7.2 16 16 16 16-7.2 16-16-7.2-16-16-16z" fill="#FFD54F"/>
+  <path d="M128 40c-26.5 0-48 21.5-48 48 0 8.8 7.2 16 16 16s16-7.2 16-16c0-8.8 7.2-16 16-16s16 7.2 16 16c0 8.8-7.2 16-16 16-8.8 0-16 7.2-16 16v24c0 8.8 7.2 16 16 16s16-7.2 16-16v-9.6c18.6-6.4 32-24 32-44.4 0-26.5-21.5-48-48-48z" fill="#FFD54F"/>
+  <text x="128" y="90" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="#0B0B0B" text-anchor="middle" dominant-baseline="middle">NI</text>
+</svg>

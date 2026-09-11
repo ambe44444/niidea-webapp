@@ -1,0 +1,8 @@
+nextjs_space/.env
+nextjs_space/.env.local
+nextjs_space/node_modules/
+nextjs_space/.next/
+nextjs_space/.build/
+*.log
+nextjs_space/.env
+nextjs_space/.env.local

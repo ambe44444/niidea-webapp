@@ -1,0 +1,58 @@
+▲ Next.js 16.3.3 (Turbopack)
+- Environments: .env
+✓ Running next.config.js took 10ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 3.2s
+  Skipping validation of types
+
+  We detected TypeScript in your project and reconfigured your tsconfig.json file for you.
+  The following suggested values were added to your tsconfig.json. These values can be changed to fit your project's needs:
+
+  	- include was updated to add '.build/dev/types/**/*.ts'
+
+  Finished TypeScript config validation in 14ms ...
+  Collecting page data using 26 workers ...
+  Generating static pages using 26 workers (0/8) ...
+  Generating static pages using 26 workers (2/8) 
+  Generating static pages using 26 workers (4/8) 
+  Generating static pages using 26 workers (6/8) 
+✓ Generating static pages using 26 workers (8/8) in 426ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+├ ○ /_not-found
+├ ○ /admin
+├ ƒ /api/admin/catalog
+├ ƒ /api/admin/experiences
+├ ƒ /api/admin/experiences/[id]/toggle
+├ ƒ /api/admin/login
+├ ƒ /api/admin/logout
+├ ƒ /api/admin/metrics
+├ ƒ /api/admin/orders
+├ ƒ /api/admin/orders/[id]/assign
+├ ƒ /api/admin/orders/[id]/confirm
+├ ƒ /api/admin/reviews
+├ ƒ /api/availability
+├ ƒ /api/checkout
+├ ƒ /api/cron/send-today
+├ ƒ /api/reviews
+├ ƒ /api/send-whatsapp
+├ ƒ /api/webhooks/stripe
+├ ○ /aviso-legal
+├ ○ /buy
+├ ○ /confirmation
+├ ○ /devoluciones
+└ ○ /privacidad
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+
+/home/ubuntu/niidea_webapp/nextjs_space/components/availability-calendar.tsx
+  35:54  error  `new Date()` in useState() runs during SSR and again on the client, producing different values (hydration mismatch). Initialize deterministically and update the value inside useEffect, or wrap the UI in <ClientOnly>  ssr/no-impure-values-in-render
+
+✖ 1 problem (1 error, 0 warnings)
+

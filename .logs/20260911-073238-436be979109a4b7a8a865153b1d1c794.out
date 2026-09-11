@@ -1,0 +1,43 @@
+.build/types/validator.ts(126,31): error TS2344: Type 'typeof import("/home/ubuntu/niidea_webapp/nextjs_space/app/api/admin/experiences/[id]/toggle/route")' does not satisfy the constraint 'RouteHandlerConfig<"/api/admin/experiences/[id]/toggle">'.
+  Types of property 'POST' are incompatible.
+    Type '(_request: Request, { params }: { params: { id: string; }; }) => Promise<NextResponse<{ name: string; id: string; date: Date; level: string; time: string; location: string; capacity: number; remainingCapacity: number; ... 9 more ...; discoveredAt: Date | null; }> | NextResponse<...>>' is not assignable to type '(request: NextRequest, context: { params: Promise<{ id: string; }>; }) => void | Response | Promise<void | Response>'.
+      Types of parameters '__1' and 'context' are incompatible.
+        Type '{ params: Promise<{ id: string; }>; }' is not assignable to type '{ params: { id: string; }; }'.
+          Types of property 'params' are incompatible.
+            Property 'id' is missing in type 'Promise<{ id: string; }>' but required in type '{ id: string; }'.
+.build/types/validator.ts(171,31): error TS2344: Type 'typeof import("/home/ubuntu/niidea_webapp/nextjs_space/app/api/admin/orders/[id]/assign/route")' does not satisfy the constraint 'RouteHandlerConfig<"/api/admin/orders/[id]/assign">'.
+  Types of property 'POST' are incompatible.
+    Type '(request: Request, { params }: { params: { id: string; }; }) => Promise<NextResponse<{ success: boolean; }> | NextResponse<{ error: any; }>>' is not assignable to type '(request: NextRequest, context: { params: Promise<{ id: string; }>; }) => void | Response | Promise<void | Response>'.
+      Types of parameters '__1' and 'context' are incompatible.
+        Type '{ params: Promise<{ id: string; }>; }' is not assignable to type '{ params: { id: string; }; }'.
+          Types of property 'params' are incompatible.
+            Property 'id' is missing in type 'Promise<{ id: string; }>' but required in type '{ id: string; }'.
+.build/types/validator.ts(180,31): error TS2344: Type 'typeof import("/home/ubuntu/niidea_webapp/nextjs_space/app/api/admin/orders/[id]/confirm/route")' does not satisfy the constraint 'RouteHandlerConfig<"/api/admin/orders/[id]/confirm">'.
+  Types of property 'PATCH' are incompatible.
+    Type '(request: Request, { params }: { params: { id: string; }; }) => Promise<NextResponse<{ success: boolean; reservationConfirmed: boolean; }> | NextResponse<{ error: any; }>>' is not assignable to type '(request: NextRequest, context: { params: Promise<{ id: string; }>; }) => void | Response | Promise<void | Response>'.
+      Types of parameters '__1' and 'context' are incompatible.
+        Type '{ params: Promise<{ id: string; }>; }' is not assignable to type '{ params: { id: string; }; }'.
+          Types of property 'params' are incompatible.
+            Property 'id' is missing in type 'Promise<{ id: string; }>' but required in type '{ id: string; }'.
+.next/dev/types/validator.ts(126,31): error TS2344: Type 'typeof import("/home/ubuntu/niidea_webapp/nextjs_space/app/api/admin/experiences/[id]/toggle/route")' does not satisfy the constraint 'RouteHandlerConfig<"/api/admin/experiences/[id]/toggle">'.
+  Types of property 'POST' are incompatible.
+    Type '(_request: Request, { params }: { params: { id: string; }; }) => Promise<NextResponse<{ name: string; id: string; date: Date; level: string; time: string; location: string; capacity: number; remainingCapacity: number; ... 9 more ...; discoveredAt: Date | null; }> | NextResponse<...>>' is not assignable to type '(request: NextRequest, context: { params: Promise<{ id: string; }>; }) => void | Response | Promise<void | Response>'.
+      Types of parameters '__1' and 'context' are incompatible.
+        Type '{ params: Promise<{ id: string; }>; }' is not assignable to type '{ params: { id: string; }; }'.
+          Types of property 'params' are incompatible.
+            Property 'id' is missing in type 'Promise<{ id: string; }>' but required in type '{ id: string; }'.
+.next/dev/types/validator.ts(171,31): error TS2344: Type 'typeof import("/home/ubuntu/niidea_webapp/nextjs_space/app/api/admin/orders/[id]/assign/route")' does not satisfy the constraint 'RouteHandlerConfig<"/api/admin/orders/[id]/assign">'.
+  Types of property 'POST' are incompatible.
+    Type '(request: Request, { params }: { params: { id: string; }; }) => Promise<NextResponse<{ success: boolean; }> | NextResponse<{ error: any; }>>' is not assignable to type '(request: NextRequest, context: { params: Promise<{ id: string; }>; }) => void | Response | Promise<void | Response>'.
+      Types of parameters '__1' and 'context' are incompatible.
+        Type '{ params: Promise<{ id: string; }>; }' is not assignable to type '{ params: { id: string; }; }'.
+          Types of property 'params' are incompatible.
+            Property 'id' is missing in type 'Promise<{ id: string; }>' but required in type '{ id: string; }'.
+.next/dev/types/validator.ts(180,31): error TS2344: Type 'typeof import("/home/ubuntu/niidea_webapp/nextjs_space/app/api/admin/orders/[id]/confirm/route")' does not satisfy the constraint 'RouteHandlerConfig<"/api/admin/orders/[id]/confirm">'.
+  Types of property 'PATCH' are incompatible.
+    Type '(request: Request, { params }: { params: { id: string; }; }) => Promise<NextResponse<{ success: boolean; reservationConfirmed: boolean; }> | NextResponse<{ error: any; }>>' is not assignable to type '(request: NextRequest, context: { params: Promise<{ id: string; }>; }) => void | Response | Promise<void | Response>'.
+      Types of parameters '__1' and 'context' are incompatible.
+        Type '{ params: Promise<{ id: string; }>; }' is not assignable to type '{ params: { id: string; }; }'.
+          Types of property 'params' are incompatible.
+            Property 'id' is missing in type 'Promise<{ id: string; }>' but required in type '{ id: string; }'.
+exit_code=2

@@ -1,0 +1,68 @@
+generator client {
+  provider      = "prisma-client-js"
+  output = "/home/ubuntu/niidea_webapp/nextjs_space/node_modules/.prisma/client"
+  binaryTargets = ["native", "linux-musl-arm64-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Order {
+  id                   String      @id @default(dbgenerated("(gen_random_uuid())::text"))
+  email                String
+  phone                String
+  date                 DateTime
+  people               Int
+  level                String
+  price                Int
+  status               String      @default("pending")
+  assignedExperienceId String?     @map("assigned_experience_id")
+  stripeSessionId      String?     @unique @map("stripe_session_id")
+  whatsapp_sent        Boolean     @default(false)
+  reservationConfirmed Boolean     @default(false) @map("reservation_confirmed")
+  reservationNote      String?     @map("reservation_note")
+  createdAt            DateTime    @default(now()) @map("created_at")
+  assignedExperience   Experience? @relation(fields: [assignedExperienceId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("orders")
+}
+
+model Experience {
+  id                String    @id @default(dbgenerated("(gen_random_uuid())::text"))
+  name              String
+  level             String
+  date              DateTime
+  time              String
+  location          String
+  capacity          Int
+  remainingCapacity Int       @map("remaining_capacity")
+  isActive          Boolean   @default(true) @map("is_active")
+  category          String?
+  description       String?
+  neighborhood      String?
+  costPerPerson     Int?      @map("cost_per_person")
+  marginPerPerson   Int?      @map("margin_per_person")
+  sourceUrl         String?   @map("source_url")
+  sourceName        String?   @map("source_name")
+  autoDiscovered    Boolean   @default(false) @map("auto_discovered")
+  discoveredAt      DateTime? @map("discovered_at")
+  orders            Order[]
+
+  @@index([category, level], map: "idx_exp_category")
+  @@index([level, date, isActive], map: "idx_exp_level_date")
+  @@map("experiences")
+}
+
+model Review {
+  id        String   @id @default(dbgenerated("(gen_random_uuid())::text"))
+  name      String
+  stars     Int      @default(5)
+  level     String?
+  text      String
+  approved  Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("reviews")
+}

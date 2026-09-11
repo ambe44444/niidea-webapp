@@ -1,0 +1,32 @@
+▲ Next.js 16.3.3 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://10.42.246.123:3000
+- Environments: .env
+✓ Ready in 253ms
+✓ Running next.config.js took 17ms
+Creating turbopack project { dir: '/home/ubuntu/niidea_webapp/nextjs_space', testMode: true }
+
+ GET / 200 in 10.5s (next.js: 194ms, application-code: 10.3s)
+ GET / 200 in 10.1s (next.js: 3ms, application-code: 10.1s)
+ GET / 200 in 10.1s (next.js: 1.9ms, application-code: 10.1s)
+⚠ Blocked cross-origin request to Next.js dev resource /_next/static/chunks/%5Broot-of-the-server%5D__1pkp-f7._.css from an unknown source.
+Cross-origin access to Next.js dev resources is blocked by default for safety.
+
+This request did not include an allowlistable source host.
+If you need it to succeed, make sure the browser sends an Origin or Referer from a host listed in "allowedDevOrigins".
+
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+ GET / 200 in 10.1s (next.js: 1.7ms, application-code: 10.1s)
+ GET / 200 in 10.1s (next.js: 3ms, application-code: 10.1s)
+ GET / 200 in 10.1s (next.js: 3ms, application-code: 10.1s)
+ GET / 200 in 10.1s (next.js: 2ms, application-code: 10.1s)
+ GET / 200 in 10.1s (next.js: 1.9ms, application-code: 10.1s)
+ GET / 200 in 10.1s (next.js: 3ms, application-code: 10.1s)
+ GET / 200 in 10.1s (next.js: 2ms, application-code: 10.1s)
+ GET / 200 in 10.1s (next.js: 2ms, application-code: 10.1s)
+ GET / 200 in 10.1s (next.js: 1.7ms, application-code: 10.1s)
+ GET / 200 in 10.1s (next.js: 1.6ms, application-code: 10.1s)
+ GET / 200 in 10.1s (next.js: 1.8ms, application-code: 10.1s)
+ GET / 200 in 10.1s (next.js: 1.8ms, application-code: 10.1s)
+ GET / 200 in 2.9s (next.js: 1.8ms, application-code: 2.9s)
+[?25h

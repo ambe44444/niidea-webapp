@@ -1,0 +1,49 @@
+▲ Next.js 16.3.3 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://10.42.246.123:3000
+- Environments: .env
+✓ Ready in 264ms
+✓ Running next.config.js took 22ms
+Creating turbopack project { dir: '/home/ubuntu/niidea_webapp/nextjs_space', testMode: true }
+
+ GET / 200 in 10.4s (next.js: 149ms, application-code: 10.3s)
+ GET / 200 in 10.1s (next.js: 7ms, application-code: 10.1s)
+[browser] Image with src "https://cdn.abacus.ai/images/7951bb20-0ef8-4a75-b0a2-69afc66c8c3c.png" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading (file:///home/ubuntu/niidea_webapp/nextjs_space/.next/dev/static/chunks/1d2u_next_dist_1lqh3rn._.js:781:13)
+ GET /buy 200 in 499ms (next.js: 343ms, application-code: 156ms)
+ GET /aviso-legal 200 in 492ms (next.js: 327ms, application-code: 165ms)
+ GET /privacidad 200 in 475ms (next.js: 358ms, application-code: 117ms)
+ GET /devoluciones 200 in 475ms (next.js: 350ms, application-code: 125ms)
+ GET /api/availability?people=2 200 in 4.0s (next.js: 190ms, application-code: 3.8s)
+Availability error: Error [PrismaClientInitializationError]: 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$home$2f$ubuntu$2f$niidea_webapp$2f$nextjs_space$2f$lib$2f$prisma$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].experience.findMany()` invocation in
+/home/ubuntu/niidea_webapp/nextjs_space/.next/dev/server/chunks/[root-of-the-server]__109qho8._.js:132:208
+
+  129 async function getAvailability(people) {
+  130     const group = Math.max(1, Math.min(10, Math.floor(people) || 1));
+  131     const from = new Date(`${firstBookableDate()}T00:00:00.000Z`);
+→ 132     const rows = await __TURBOPACK__imported__module__$5b$project$5d2f$home$2f$ubuntu$2f$niidea_webapp$2f$nextjs_space$2f$lib$2f$prisma$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].experience.findMany(
+Timed out fetching a new connection from the connection pool. More info: http://pris.ly/d/connection-pool (Current connection pool timeout: 10, connection limit: 33)
+    at <unknown> (lib/availability.ts:32:40)
+    at async getAvailability (lib/availability.ts:32:16)
+    at async GET (app/api/availability/route.ts:10:18)
+  30 |   const from = new Date(`${firstBookableDate()}T00:00:00.000Z`)
+  31 |
+> 32 |   const rows = await prisma.experience.findMany({
+     |                                        ^
+  33 |     where: {
+  34 |       isActive: true,
+  35 |       date: { gte: from }, {
+  clientVersion: '6.7.0',
+  errorCode: undefined,
+  retryable: undefined
+}
+ GET / 200 in 10.2s (next.js: 1.8ms, application-code: 10.2s)
+ GET / 200 in 10.1s (next.js: 7ms, application-code: 10.1s)
+ GET /buy 200 in 33ms (next.js: 7ms, application-code: 26ms)
+ GET /admin 200 in 382ms (next.js: 349ms, application-code: 33ms)
+ GET /confirmation 200 in 174ms (next.js: 132ms, application-code: 42ms)
+ GET /aviso-legal 200 in 32ms (next.js: 2ms, application-code: 30ms)
+ GET /privacidad 200 in 24ms (next.js: 1.8ms, application-code: 22ms)
+ GET /devoluciones 200 in 30ms (next.js: 3ms, application-code: 27ms)
+[?25h

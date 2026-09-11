@@ -1,0 +1,20 @@
+▲ Next.js 16.3.3 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://10.42.246.123:3000
+- Environments: .env
+✓ Ready in 258ms
+✓ Running next.config.js took 16ms
+Creating turbopack project { dir: '/home/ubuntu/niidea_webapp/nextjs_space', testMode: true }
+
+  We detected TypeScript in your project and reconfigured your tsconfig.json file for you.
+  The following suggested values were added to your tsconfig.json. These values can be changed to fit your project's needs:
+
+  	- include was updated to add '.next/dev/types/**/*.ts'
+
+  The following mandatory changes were made to your tsconfig.json:
+
+  	- jsx was set to react-jsx (next.js uses the React automatic runtime)
+
+
+ GET / 200 in 12.1s (next.js: 1822ms, application-code: 10.3s)
+[?25h
