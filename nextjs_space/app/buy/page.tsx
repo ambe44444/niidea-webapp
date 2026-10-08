@@ -37,6 +37,9 @@ function BuyPageInner() {
   const [level, setLevel] = useState('')
   const [allergies, setAllergies] = useState('')
   const [birthday, setBirthday] = useState('')
+  const [dayPreference, setDayPreference] = useState('')
+  const [timePreference, setTimePreference] = useState('')
+  const [notes, setNotes] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [availableDays, setAvailableDays] = useState<Record<string, string[]>>({})
@@ -100,7 +103,7 @@ function BuyPageInner() {
       const res = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, phone: `+34${phone}`, date, people, level, allergies: allergies.trim() || null, birthday: birthday.trim() || null }),
+        body: JSON.stringify({ email, phone: `+34${phone}`, date, people, level, allergies: allergies.trim() || null, birthday: birthday.trim() || null, dayPreference: dayPreference || null, timePreference: timePreference || null, notes: notes.trim() || null }),
       })
       const data = await res.json()
       if (data?.url) {
@@ -216,6 +219,54 @@ function BuyPageInner() {
                     value={allergies}
                     onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setAllergies(e.target.value)}
                     placeholder="Ej: celíaco, vegetariano, alergia a los mariscos..."
+                    rows={2}
+                    className="w-full bg-white/[0.05] border border-white/[0.08] rounded-xl px-4 py-3.5 text-white placeholder:text-white/20 focus:outline-none focus:border-[#FFD54F]/50 transition-colors resize-none"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm text-white/60 mb-1.5 block">
+                    📅 ¿Prefieres algún día de la semana? <span className="text-white/30">(opcional)</span>
+                  </label>
+                  <select
+                    value={dayPreference}
+                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setDayPreference(e.target.value)}
+                    className="w-full bg-white/[0.05] border border-white/[0.08] rounded-xl px-4 py-3.5 text-white focus:outline-none focus:border-[#FFD54F]/50 transition-colors [color-scheme:dark]"
+                  >
+                    <option value="" className="bg-[#141414]">Cualquier día</option>
+                    <option value="Lunes" className="bg-[#141414]">Lunes</option>
+                    <option value="Martes" className="bg-[#141414]">Martes</option>
+                    <option value="Miércoles" className="bg-[#141414]">Miércoles</option>
+                    <option value="Jueves" className="bg-[#141414]">Jueves</option>
+                    <option value="Viernes" className="bg-[#141414]">Viernes</option>
+                    <option value="Sábado" className="bg-[#141414]">Sábado</option>
+                    <option value="Domingo" className="bg-[#141414]">Domingo</option>
+                    <option value="Entre semana" className="bg-[#141414]">Entre semana (L-V)</option>
+                    <option value="Fin de semana" className="bg-[#141414]">Fin de semana (S-D)</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-sm text-white/60 mb-1.5 block">
+                    🕑 ¿A qué hora prefieres? <span className="text-white/30">(opcional)</span>
+                  </label>
+                  <select
+                    value={timePreference}
+                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setTimePreference(e.target.value)}
+                    className="w-full bg-white/[0.05] border border-white/[0.08] rounded-xl px-4 py-3.5 text-white focus:outline-none focus:border-[#FFD54F]/50 transition-colors [color-scheme:dark]"
+                  >
+                    <option value="" className="bg-[#141414]">Me da igual</option>
+                    <option value="Mañana" className="bg-[#141414]">Mañana</option>
+                    <option value="Tarde" className="bg-[#141414]">Tarde</option>
+                    <option value="Noche" className="bg-[#141414]">Noche</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-sm text-white/60 mb-1.5 block">
+                    📝 Observaciones <span className="text-white/30">(opcional)</span>
+                  </label>
+                  <textarea
+                    value={notes}
+                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setNotes(e.target.value)}
+                    placeholder="Cualquier cosa que debamos saber para prepararte el mejor plan..."
                     rows={2}
                     className="w-full bg-white/[0.05] border border-white/[0.08] rounded-xl px-4 py-3.5 text-white placeholder:text-white/20 focus:outline-none focus:border-[#FFD54F]/50 transition-colors resize-none"
                   />
@@ -355,6 +406,24 @@ function BuyPageInner() {
                   <div className="flex justify-between text-sm">
                     <span className="text-white/50">🌿 Alergias</span>
                     <span className="text-right max-w-[55%]">{allergies}</span>
+                  </div>
+                )}
+                {dayPreference && (
+                  <div className="flex justify-between text-sm">
+                    <span className="text-white/50">📅 Día preferido</span>
+                    <span className="text-right max-w-[55%]">{dayPreference}</span>
+                  </div>
+                )}
+                {timePreference && (
+                  <div className="flex justify-between text-sm">
+                    <span className="text-white/50">🕑 Franja horaria</span>
+                    <span className="text-right max-w-[55%]">{timePreference}</span>
+                  </div>
+                )}
+                {notes && (
+                  <div className="flex justify-between text-sm">
+                    <span className="text-white/50">📝 Observaciones</span>
+                    <span className="text-right max-w-[55%]">{notes}</span>
                   </div>
                 )}
                 <div className="border-t border-white/[0.06] pt-4 flex justify-between">

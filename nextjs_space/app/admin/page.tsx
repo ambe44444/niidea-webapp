@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, Fragment } from 'react'
 import {
   LogIn, LogOut, BarChart3, ShoppingBag, Sparkles, Send,
   Plus, ToggleLeft, ToggleRight, Users, DollarSign, CalendarDays,
-  X, Loader2, RefreshCw, MapPin, Clock, Star, ChevronDown
+  X, Loader2, RefreshCw, MapPin, Clock, Star, ChevronDown, Download, FileSpreadsheet
 } from 'lucide-react'
 
 interface OrderType {
@@ -18,6 +18,11 @@ interface OrderType {
   status: string
   whatsappSent: boolean
   reservationConfirmed?: boolean
+  allergies?: string | null
+  birthday?: string | null
+  dayPreference?: string | null
+  timePreference?: string | null
+  notes?: string | null
   createdAt: string
   assignedExperience: ExperienceType | null
 }
@@ -42,7 +47,23 @@ interface ExperienceType {
   _count?: { orders: number }
 }
 
-type TabKey = 'metrics' | 'orders' | 'experiences' | 'reviews'
+type TabKey = 'metrics' | 'orders' | 'experiences' | 'reviews' | 'catalog'
+
+type CatalogInfo = {
+  generatedAt: string
+  totalExperiences: number
+  activeExperiences: number
+  lastExperienceDate: string | null
+  filename: string
+  downloadUrl: string
+  dailyRun?: {
+    fecha_ejecucion?: string
+    experiencias_activas_total?: number
+    experiencias_desactivadas?: number
+    primera_fecha_reservable?: string
+    nota?: string
+  } | null
+}
 
 type ReviewType = {
   id: string
@@ -66,6 +87,7 @@ export default function AdminPage() {
   const [orders, setOrders] = useState<OrderType[]>([])
   const [experiences, setExperiences] = useState<ExperienceType[]>([])
   const [reviews, setReviews] = useState<ReviewType[]>([])
+  const [catalogInfo, setCatalogInfo] = useState<CatalogInfo | null>(null)
   const [loadingData, setLoadingData] = useState(false)
 
   // Modals
@@ -127,6 +149,9 @@ export default function AdminPage() {
       } else if (t === 'reviews') {
         const res = await fetch('/api/admin/reviews')
         if (res.ok) setReviews(await res.json())
+      } else if (t === 'catalog') {
+        const res = await fetch('/api/admin/catalog/latest')
+        if (res.ok) setCatalogInfo(await res.json())
       } else {
         const res = await fetch('/api/admin/experiences')
         if (res.ok) setExperiences(await res.json())
@@ -179,6 +204,28 @@ export default function AdminPage() {
       setAssignModal(null)
       loadTab('orders')
     } catch { /* ignore */ }
+  }
+
+  // Si el pedido ya tiene plan asignado usamos el endpoint de reasignación (PATCH),
+  // que libera el plan anterior y ocupa el nuevo. Si no, asignación normal (POST).
+  const reassignExperience = async (orderId: string, experienceId: string, already: boolean) => {
+    if (!already) return assignExperience(orderId, experienceId)
+    try {
+      const res = await fetch(`/api/admin/orders/${orderId}/reassign`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ experienceId }),
+      })
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        alert('No se pudo reasignar el plan: ' + (data?.error ?? 'error desconocido'))
+        return
+      }
+      setAssignModal(null)
+      loadTab('orders')
+    } catch {
+      alert('No se pudo reasignar el plan. Inténtalo de nuevo.')
+    }
   }
 
   const toggleExperience = async (id: string) => {
@@ -279,6 +326,7 @@ export default function AdminPage() {
     { key: 'orders', label: 'Pedidos', icon: ShoppingBag },
     { key: 'experiences', label: 'Experiencias', icon: Sparkles },
     { key: 'reviews', label: 'Reseñas', icon: Star },
+    { key: 'catalog', label: 'Catálogo del día', icon: FileSpreadsheet },
   ]
 
   return (
@@ -435,7 +483,14 @@ export default function AdminPage() {
                             </span>
                           </button>
                         ) : (
-                          <span className="text-xs text-amber-400/80">Sin asignar</span>
+                          <button
+                            onClick={() => setOpenOrder(isOpen ? null : o.id)}
+                            className="text-left group flex items-center gap-1"
+                            title="Ver datos del cliente"
+                          >
+                            <span className="text-xs text-amber-400/80 group-hover:text-amber-300">Sin asignar</span>
+                            <ChevronDown className={`w-3.5 h-3.5 shrink-0 text-amber-400/60 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+                          </button>
                         )}
                       </td>
                       <td className="py-3">
@@ -461,22 +516,85 @@ export default function AdminPage() {
                         </div>
                       </td>
                     </tr>
-                    {isOpen && exp && (
+                    {isOpen && (
                       <tr className="border-b border-white/[0.04] bg-white/[0.02]">
                         <td colSpan={8} className="px-4 py-4">
+                          {/* DATOS DEL CLIENTE — siempre visibles */}
+                          <div className="rounded-xl border border-[#FFD54F]/20 bg-[#FFD54F]/[0.03] p-4 mb-4">
+                            <p className="font-semibold text-white mb-3 flex items-center gap-2">
+                              <Users className="w-4 h-4 text-[#FFD54F]" /> Datos del cliente
+                            </p>
+                            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 text-xs">
+                              <div>
+                                <p className="text-white/35">Email</p>
+                                <p className="text-white/80 break-all">{o?.email || '—'}</p>
+                              </div>
+                              <div>
+                                <p className="text-white/35">Teléfono</p>
+                                <p className="text-white/80">{o?.phone || '—'}</p>
+                              </div>
+                              <div>
+                                <p className="text-white/35">Personas</p>
+                                <p className="text-white/80">{o?.people ?? 0}</p>
+                              </div>
+                              <div>
+                                <p className="text-white/35">🎂 Cumpleaños / ocasión</p>
+                                <p className="text-white/80">{o?.birthday || '—'}</p>
+                              </div>
+                              <div>
+                                <p className="text-white/35">🌿 Alergias / restricciones</p>
+                                <p className="text-white/80">{o?.allergies || '—'}</p>
+                              </div>
+                              <div>
+                                <p className="text-white/35">📅 Día preferido</p>
+                                <p className="text-white/80">{o?.dayPreference || '—'}</p>
+                              </div>
+                              <div>
+                                <p className="text-white/35">🕑 Franja horaria</p>
+                                <p className="text-white/80">{o?.timePreference || '—'}</p>
+                              </div>
+                              <div className="sm:col-span-2 lg:col-span-3">
+                                <p className="text-white/35">📝 Observaciones</p>
+                                <p className="text-white/80 whitespace-pre-wrap">{o?.notes || '—'}</p>
+                              </div>
+                            </div>
+                          </div>
+
+                          {!exp && (
+                            <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 flex items-center justify-between gap-3">
+                              <p className="text-xs text-amber-400/80">Este pedido todavía no tiene un plan asignado.</p>
+                              <button
+                                onClick={() => { setAssignModal(o.id); if (experiences.length === 0) loadTab('experiences').then(() => setTab('orders')) }}
+                                className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-[#FFD54F] text-[#0B0B0B] hover:bg-[#FFCA28] transition-colors whitespace-nowrap"
+                              >
+                                Asignar plan
+                              </button>
+                            </div>
+                          )}
+
+                          {exp && (
                           <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
                             <div className="flex items-start justify-between gap-3 mb-3">
                               <div>
                                 <p className="font-semibold text-white">{exp.name}</p>
                                 <p className="text-[11px] text-white/40 mt-0.5">
-                                  Cliente: {o?.email ?? ''} · {o?.phone ?? ''} · {o?.people ?? 0} pers.
+                                  Plan asignado · {o?.people ?? 0} pers.
                                 </p>
                               </div>
-                              {exp.category && (
-                                <span className="text-[10px] uppercase tracking-wider px-2 py-1 rounded-full bg-white/[0.06] text-white/60 whitespace-nowrap">
-                                  {exp.category}
-                                </span>
-                              )}
+                              <div className="flex items-center gap-2">
+                                {exp.category && (
+                                  <span className="text-[10px] uppercase tracking-wider px-2 py-1 rounded-full bg-white/[0.06] text-white/60 whitespace-nowrap">
+                                    {exp.category}
+                                  </span>
+                                )}
+                                <button
+                                  onClick={() => { setAssignModal(o.id); if (experiences.length === 0) loadTab('experiences').then(() => setTab('orders')) }}
+                                  className="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-blue-500/15 text-blue-300 hover:bg-blue-500/25 transition-colors whitespace-nowrap flex items-center gap-1"
+                                  title="Reasignar a otro plan para esta fecha y nivel"
+                                >
+                                  <RefreshCw className="w-3 h-3" /> Reasignar plan
+                                </button>
+                              </div>
                             </div>
                             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 text-xs">
                               <div>
@@ -542,6 +660,7 @@ export default function AdminPage() {
                               </p>
                             )}
                           </div>
+                          )}
                         </td>
                       </tr>
                     )}
@@ -657,34 +776,136 @@ export default function AdminPage() {
             </div>
           </div>
         )}
+
+        {/* CATALOG */}
+        {tab === 'catalog' && !loadingData && (
+          <div>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-semibold">Catálogo del día</h3>
+              <button onClick={() => loadTab('catalog')} className="text-white/40 hover:text-white text-sm flex items-center gap-1">
+                <RefreshCw className="w-3.5 h-3.5" /> Actualizar
+              </button>
+            </div>
+
+            <div className="rounded-xl border border-[#FFD54F]/20 bg-[#FFD54F]/[0.04] p-5 mb-6">
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-11 h-11 rounded-lg bg-[#FFD54F]/15 flex items-center justify-center">
+                    <FileSpreadsheet className="w-5 h-5 text-[#FFD54F]" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-sm">{catalogInfo?.filename ?? 'Catálogo NiIdea'}</p>
+                    <p className="text-white/40 text-xs mt-0.5">
+                      Generado el {catalogInfo?.generatedAt ?? '—'} · {catalogInfo?.activeExperiences ?? 0} experiencias activas
+                    </p>
+                  </div>
+                </div>
+                <a
+                  href={catalogInfo?.downloadUrl ?? '/api/admin/catalog'}
+                  className="bg-[#FFD54F] text-[#0B0B0B] text-sm font-semibold px-4 py-2.5 rounded-lg hover:bg-[#FFCA28] transition-colors flex items-center gap-2"
+                >
+                  <Download className="w-4 h-4" /> Descargar catálogo
+                </a>
+              </div>
+            </div>
+
+            <div className="grid sm:grid-cols-3 gap-4 mb-6">
+              <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-5">
+                <p className="text-white/50 text-sm mb-2">Experiencias activas</p>
+                <p className="text-2xl font-bold">{catalogInfo?.activeExperiences ?? 0}</p>
+              </div>
+              <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-5">
+                <p className="text-white/50 text-sm mb-2">Experiencias totales</p>
+                <p className="text-2xl font-bold">{catalogInfo?.totalExperiences ?? 0}</p>
+              </div>
+              <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-5">
+                <p className="text-white/50 text-sm mb-2">Última fecha con plan</p>
+                <p className="text-2xl font-bold">{catalogInfo?.lastExperienceDate ?? '—'}</p>
+              </div>
+            </div>
+
+            {catalogInfo?.dailyRun && (
+              <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-6">
+                <h4 className="font-semibold mb-4 text-sm">Última tarea diaria</h4>
+                <div className="grid sm:grid-cols-2 gap-3 text-xs">
+                  <div className="flex justify-between">
+                    <span className="text-white/40">Fecha de ejecución</span>
+                    <span className="text-white/80">{catalogInfo.dailyRun.fecha_ejecucion ?? '—'}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-white/40">Primera fecha reservable</span>
+                    <span className="text-white/80">{catalogInfo.dailyRun.primera_fecha_reservable ?? '—'}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-white/40">Activas (tarea)</span>
+                    <span className="text-white/80">{catalogInfo.dailyRun.experiencias_activas_total ?? '—'}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-white/40">Desactivadas (tarea)</span>
+                    <span className="text-white/80">{catalogInfo.dailyRun.experiencias_desactivadas ?? '—'}</span>
+                  </div>
+                </div>
+                {catalogInfo.dailyRun.nota && (
+                  <p className="text-white/40 text-xs mt-4 border-t border-white/[0.06] pt-3 leading-relaxed">
+                    {catalogInfo.dailyRun.nota}
+                  </p>
+                )}
+              </div>
+            )}
+
+            <p className="text-white/30 text-xs mt-6">
+              El catálogo también se envía cada mañana por email a la dueña. Aquí siempre tienes la versión más reciente generada a partir de la base de datos.
+            </p>
+          </div>
+        )}
       </div>
 
-      {/* ASSIGN MODAL */}
-      {assignModal && (
+      {/* ASSIGN / REASSIGN MODAL */}
+      {assignModal && (() => {
+        const order = (orders ?? []).find((o) => o.id === assignModal) ?? null
+        const orderDay = order?.date ? order.date.slice(0, 10) : null
+        const already = Boolean(order?.assignedExperience)
+        // Candidatas: mismo nivel + misma fecha que el pedido, activas y con plazas.
+        const candidates = (experiences ?? []).filter((e: ExperienceType) => {
+          if (!e?.isActive || (e?.remainingCapacity ?? 0) <= 0) return false
+          if (order?.level && e.level !== order.level) return false
+          if (orderDay && (e.date ?? '').slice(0, 10) !== orderDay) return false
+          return true
+        })
+        // Fallback: si no hay coincidencias exactas de fecha, mostrar todas las del nivel.
+        const sameLevel = (experiences ?? []).filter((e: ExperienceType) => e?.isActive && (e?.remainingCapacity ?? 0) > 0 && (!order?.level || e.level === order.level))
+        const list = candidates.length > 0 ? candidates : sameLevel
+        const usingFallback = candidates.length === 0 && sameLevel.length > 0
+        return (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-6" onClick={() => setAssignModal(null)}>
           <div className="bg-[#141414] border border-white/[0.08] rounded-2xl p-6 w-full max-w-md" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold">Asignar experiencia</h3>
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="font-semibold">{already ? 'Reasignar plan' : 'Asignar experiencia'}</h3>
               <button onClick={() => setAssignModal(null)} className="text-white/40 hover:text-white"><X className="w-5 h-5" /></button>
             </div>
+            <p className="text-white/40 text-xs mb-4">
+              {order ? <>Nivel <strong className="text-white/70 capitalize">{order.level}</strong>{orderDay ? <> · fecha <strong className="text-white/70">{formatDate(order.date)}</strong></> : null} · {order.people} pers.</> : null}
+              {usingFallback && <span className="block text-amber-400/80 mt-1">No hay planes de ese nivel para la fecha exacta. Mostrando todos los planes del nivel.</span>}
+            </p>
             <div className="space-y-2 max-h-80 overflow-y-auto">
-              {(experiences ?? []).filter((e: ExperienceType) => e?.isActive && (e?.remainingCapacity ?? 0) > 0).map((exp: ExperienceType) => (
+              {list.map((exp: ExperienceType) => (
                 <button
                   key={exp.id}
-                  onClick={() => assignExperience(assignModal, exp.id)}
+                  onClick={() => reassignExperience(assignModal, exp.id, already)}
                   className="w-full text-left p-3 rounded-xl bg-white/[0.03] border border-white/[0.06] hover:bg-white/[0.06] transition-colors"
                 >
                   <p className="font-medium text-sm">{exp?.name ?? ''}</p>
                   <p className="text-white/40 text-xs mt-0.5">{formatDate(exp?.date ?? '')} · {exp?.time ?? ''} · {exp?.location ?? ''} · {exp?.remainingCapacity ?? 0} plazas</p>
                 </button>
               ))}
-              {(experiences ?? []).filter((e: ExperienceType) => e?.isActive && (e?.remainingCapacity ?? 0) > 0).length === 0 && (
-                <p className="text-white/40 text-sm text-center py-4">No hay experiencias disponibles</p>
+              {list.length === 0 && (
+                <p className="text-white/40 text-sm text-center py-4">No hay experiencias disponibles para este nivel.</p>
               )}
             </div>
           </div>
         </div>
-      )}
+        )
+      })()}
 
       {/* NEW EXPERIENCE MODAL */}
       {newExpModal && (

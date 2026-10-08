@@ -25,6 +25,9 @@ model Order {
   reservationNote      String?     @map("reservation_note")
   allergies            String?     @map("allergies")
   birthday             String?     @map("birthday")
+  dayPreference        String?     @map("day_preference")
+  timePreference       String?     @map("time_preference")
+  notes                String?     @map("notes")
   createdAt            DateTime    @default(now()) @map("created_at")
   assignedExperience   Experience? @relation(fields: [assignedExperienceId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
