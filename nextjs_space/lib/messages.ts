@@ -55,6 +55,9 @@ function shell(opts: { preheader: string; content: string }): string {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>NiIdea</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap');
+</style>
 </head>
 <body style="margin:0;padding:0;background-color:#0B0B0B;">
 <div style="display:none;font-size:1px;color:#0B0B0B;max-height:0;overflow:hidden;">${esc(opts.preheader)}</div>
@@ -66,7 +69,7 @@ function shell(opts: { preheader: string; content: string }): string {
         <!-- Logo -->
         <tr>
           <td align="center" style="padding-bottom:24px;">
-            <span style="font-family:Georgia,'Times New Roman',serif;font-style:italic;font-size:34px;font-weight:700;color:#FFD54F;letter-spacing:-0.5px;">NiIdea</span>
+            <span style="font-family:'Caveat',cursive;font-size:40px;font-weight:700;color:#FFD54F;letter-spacing:-0.5px;line-height:1;">Niidea</span>
           </td>
         </tr>
 
