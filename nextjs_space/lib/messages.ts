@@ -44,6 +44,14 @@ const CATEGORY_EMOJI: Record<string, string> = {
   fiesta: '🥂',
 };
 
+const CATEGORY_REVEAL: Record<string, string> = {
+  restaurante: '¡Mañana os vais a cenar!',
+  teatro: '¡Mañana os vais al teatro!',
+  experiencia: '¡Mañana vivís una experiencia única!',
+  ocio: '¡Mañana os vais de ocio!',
+  fiesta: '¡Mañana lo celebráis a lo grande!',
+};
+
 /* ------------------------------------------------------------------ */
 /* Envoltorio HTML común                                              */
 /* ------------------------------------------------------------------ */
@@ -135,6 +143,7 @@ function detailRow(icon: string, label: string, value: string): string {
 
 export function buildRevealEmail(d: RevealData): { subject: string; html: string } {
   const emoji = CATEGORY_EMOJI[d.category ?? ''] ?? '✨';
+  const revealPhrase = CATEGORY_REVEAL[d.category ?? ''] ?? null;
   const rows = detailRows([
     detailRow('🕘', 'Hora', d.time),
     detailRow('📍', 'Dónde', d.location),
@@ -148,6 +157,7 @@ export function buildRevealEmail(d: RevealData): { subject: string; html: string
       <h1 style="margin:0 0 12px;font-family:Arial,Helvetica,sans-serif;font-size:29px;line-height:36px;font-weight:bold;color:#FFFFFF;">
         Tu plan de mañana ${emoji}
       </h1>
+      ${revealPhrase ? `<h2 style="margin:0 0 20px;font-family:Arial,Helvetica,sans-serif;font-size:26px;line-height:34px;font-weight:bold;color:#FFD54F;">${esc(revealPhrase)}</h2>` : ''}
       <p style="margin:0 0 26px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:23px;color:#A8A8A8;">
         Se acabó el misterio. Esto es lo que te hemos preparado${d.dateLabel ? ` para <strong style="color:#FFFFFF;">${esc(d.dateLabel)}</strong>` : ''}.
       </p>
