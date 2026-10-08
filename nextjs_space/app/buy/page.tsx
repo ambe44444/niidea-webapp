@@ -35,10 +35,20 @@ function BuyPageInner() {
   const [date, setDate] = useState('')
   const [people, setPeople] = useState(2)
   const [level, setLevel] = useState('')
+  const [allergies, setAllergies] = useState('')
+  const [birthday, setBirthday] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [availableDays, setAvailableDays] = useState<Record<string, string[]>>({})
   const [loadingAvail, setLoadingAvail] = useState(true)
+
+  // Pre-seleccionar nivel desde URL param ?level=soft|medium|full
+  useEffect(() => {
+    const levelParam = searchParams?.get('level')
+    if (levelParam && LEVELS.some((l) => l.key === levelParam)) {
+      setLevel(levelParam)
+    }
+  }, [searchParams])
 
   // La disponibilidad depende del tamaño del grupo: recargamos al cambiarlo.
   useEffect(() => {
@@ -90,7 +100,7 @@ function BuyPageInner() {
       const res = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, phone: `+34${phone}`, date, people, level }),
+        body: JSON.stringify({ email, phone: `+34${phone}`, date, people, level, allergies: allergies.trim() || null, birthday: birthday.trim() || null }),
       })
       const data = await res.json()
       if (data?.url) {
@@ -185,6 +195,30 @@ function BuyPageInner() {
                       className="w-full bg-white/[0.05] border border-white/[0.08] rounded-xl pl-[4.5rem] pr-4 py-3.5 text-white placeholder:text-white/20 focus:outline-none focus:border-[#FFD54F]/50 transition-colors"
                     />
                   </div>
+                </div>
+                <div>
+                  <label className="text-sm text-white/60 mb-1.5 block">
+                    🎂 ¿Es para un cumpleaños u ocasión especial? <span className="text-white/30">(opcional)</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={birthday}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setBirthday(e.target.value)}
+                    placeholder="Ej: cumpleaños de Ana, 30 años"
+                    className="w-full bg-white/[0.05] border border-white/[0.08] rounded-xl px-4 py-3.5 text-white placeholder:text-white/20 focus:outline-none focus:border-[#FFD54F]/50 transition-colors"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm text-white/60 mb-1.5 block">
+                    🌿 Alergias o restricciones alimentarias <span className="text-white/30">(opcional)</span>
+                  </label>
+                  <textarea
+                    value={allergies}
+                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setAllergies(e.target.value)}
+                    placeholder="Ej: celíaco, vegetariano, alergia a los mariscos..."
+                    rows={2}
+                    className="w-full bg-white/[0.05] border border-white/[0.08] rounded-xl px-4 py-3.5 text-white placeholder:text-white/20 focus:outline-none focus:border-[#FFD54F]/50 transition-colors resize-none"
+                  />
                 </div>
               </div>
             </div>
@@ -311,6 +345,18 @@ function BuyPageInner() {
                   <span className="text-white/50">Nivel</span>
                   <span className="font-medium" style={{ color: selectedLevel?.color ?? '#fff' }}>{selectedLevel?.label ?? ''}</span>
                 </div>
+                {birthday && (
+                  <div className="flex justify-between text-sm">
+                    <span className="text-white/50">🎂 Celebración</span>
+                    <span className="text-right max-w-[55%]">{birthday}</span>
+                  </div>
+                )}
+                {allergies && (
+                  <div className="flex justify-between text-sm">
+                    <span className="text-white/50">🌿 Alergias</span>
+                    <span className="text-right max-w-[55%]">{allergies}</span>
+                  </div>
+                )}
                 <div className="border-t border-white/[0.06] pt-4 flex justify-between">
                   <span className="text-white/50">Total</span>
                   <span className="text-2xl font-bold text-[#FFD54F]">{totalPrice}€</span>

@@ -23,6 +23,8 @@ model Order {
   whatsapp_sent        Boolean     @default(false)
   reservationConfirmed Boolean     @default(false) @map("reservation_confirmed")
   reservationNote      String?     @map("reservation_note")
+  allergies            String?     @map("allergies")
+  birthday             String?     @map("birthday")
   createdAt            DateTime    @default(now()) @map("created_at")
   assignedExperience   Experience? @relation(fields: [assignedExperienceId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 

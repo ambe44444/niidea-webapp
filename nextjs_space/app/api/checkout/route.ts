@@ -8,7 +8,7 @@ import { isSlotAvailable } from '@/lib/availability';
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { email, phone, date, people, level } = body ?? {};
+    const { email, phone, date, people, level, allergies, birthday } = body ?? {};
 
     if (!email || !phone || !date || !people || !level) {
       return NextResponse.json({ error: 'Faltan campos obligatorios' }, { status: 400 });
@@ -41,6 +41,8 @@ export async function POST(request: Request) {
         level,
         price: totalPrice,
         status: 'pending',
+        allergies: allergies ?? null,
+        birthday: birthday ?? null,
       },
     });
 

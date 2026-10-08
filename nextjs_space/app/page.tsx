@@ -245,15 +245,18 @@ function LevelCard({
   price,
   desc,
   popular,
+  levelKey,
 }: {
   name: string
   price: string
   desc: string
   popular?: boolean
+  levelKey: string
 }) {
   return (
-    <div
-      className={`relative rounded-2xl border p-6 transition-colors ${
+    <Link
+      href={`/buy?level=${levelKey}`}
+      className={`relative rounded-2xl border p-6 block transition-all cursor-pointer hover:scale-[1.02] hover:shadow-xl hover:shadow-yellow-500/10 ${
         popular ? 'bg-white/[0.04]' : 'border-white/10 bg-white/[0.02]'
       }`}
       style={popular ? { borderColor: YELLOW } : undefined}
@@ -272,7 +275,11 @@ function LevelCard({
         {price}
         <span className="ml-1 text-sm font-normal text-white/40">/ persona</span>
       </p>
-    </div>
+      <div className="mt-4 flex items-center justify-end gap-1 text-sm font-semibold" style={{ color: YELLOW }}>
+        <span>Elegir</span>
+        <ArrowRight className="h-4 w-4" />
+      </div>
+    </Link>
   )
 }
 
@@ -383,9 +390,15 @@ export default async function Home() {
               <Feature icon={Star} title="Desde 25€/pers." />
             </div>
 
+            {/* Badge +1.300 experiencias */}
+            <div className="mt-6 inline-flex items-center gap-2 rounded-full border px-5 py-2.5" style={{ borderColor: 'rgba(255,213,79,0.35)', background: 'rgba(255,213,79,0.07)' }}>
+              <Star className="h-4 w-4 shrink-0" style={{ color: YELLOW }} />
+              <span className="text-sm font-bold tracking-wide text-white">+1.300 experiencias disponibles en Madrid</span>
+            </div>
+
             <Link
               href="/buy"
-              className="mt-10 inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-bold text-black shadow-lg shadow-yellow-500/20 transition-transform hover:scale-105"
+              className="mt-8 inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-bold text-black shadow-lg shadow-yellow-500/20 transition-transform hover:scale-105"
               style={{ background: YELLOW }}
             >
               Comprar sin saber
@@ -404,10 +417,13 @@ export default async function Home() {
         <p className="mt-2 text-center text-white/50">
           Tú decides la intensidad. Nosotros el plan.
         </p>
+        <p className="mt-3 text-center text-lg font-bold" style={{ color: YELLOW }}>
+          +1.300 experiencias disponibles en Madrid
+        </p>
         <div className="mt-10 grid gap-5 md:grid-cols-3">
-          <LevelCard name="Soft" price="25€" desc="Plan tranquilo" />
-          <LevelCard name="Medium" price="30€" desc="Plan sorpresa top" popular />
-          <LevelCard name="Full" price="35€" desc="Experiencia loca" />
+          <LevelCard name="Soft" price="25€" desc="Plan tranquilo" levelKey="soft" />
+          <LevelCard name="Medium" price="30€" desc="Plan sorpresa top" popular levelKey="medium" />
+          <LevelCard name="Full" price="35€" desc="Experiencia loca" levelKey="full" />
         </div>
       </section>
 
